@@ -15,13 +15,15 @@ class MainViewModel : ViewModel() {
     }
 
     val loggedIn = userFlow
-        .map { it.user != User.EMPTY && it.error == null }
+        .map { it is UserState.User }
         .onStart { false }
         .onEach { _loading.postValue(false) }
         .asLiveData()
 
     val errorMessage = userFlow
-        .map { it.error?.message ?: "" }
+        .filter { it is UserState.Error }
+        .map { it as UserState.Error }
+        .map { it.throwable.message ?: "" }
         .onStart { "" }
         .asLiveData()
 

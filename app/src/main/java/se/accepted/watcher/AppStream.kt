@@ -10,6 +10,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 interface Message
 interface State : Message
+interface Action : Message
 
 object AppStream {
 

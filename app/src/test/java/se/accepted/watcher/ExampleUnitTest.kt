@@ -14,7 +14,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import se.accepted.watcher.ui.main.*
 
-class MainViewModelTest(){
+class MainViewModelTest{
 
     @Test
     fun itShouldShowSuccessfulMessageOnValidUserLogin() = runTest {

@@ -35,7 +35,7 @@ class MainViewModel : ViewModel() {
 
     suspend fun login(username:String, password:String) {
         uiMessageFlow.emit(ShowLoading)
-//        send(LoginMessage(username, password))
+        send(LoginMessage(username, password))
         checkCurrentUser()
     }
 

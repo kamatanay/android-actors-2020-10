@@ -1,7 +1,12 @@
 package se.accepted.watcher
 
+import app.cash.turbine.test
 import com.google.gson.Gson
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -9,11 +14,14 @@ import okio.buffer
 import okio.source
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import se.accepted.watcher.AppStream.send
 import se.accepted.watcher.model.PostsResponse
 import se.accepted.watcher.network.PostsService
+import se.accepted.watcher.ui.main.*
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
@@ -21,6 +29,13 @@ import java.util.concurrent.TimeUnit
 class NetworkRequestTest {
 
     private val mockWebServer = MockWebServer()
+
+    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
+
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(mainThreadSurrogate)
+    }
 
 
     private val okHttpClient by lazy {
@@ -76,9 +91,35 @@ class NetworkRequestTest {
         }
     }
 
+    @Test
+    fun itShouldSendMessageToFetchPosts() = runTest {
+        val vm = PostsViewModel()
+        launch(Dispatchers.Main) {
+            AppStream.messages.test {
+                assertEquals(awaitItem(), FetchPosts)
+                val message = awaitItem()
+                if (message is GetPostsState) {
+                    message.state.complete(PostsState.Error)
+                }
+
+            }
+
+
+        }
+
+        vm.sharedPostUiFlow.test {
+            vm.fetchPosts()
+            assertEquals(awaitItem(), PostsFetchFailed)
+        }
+
+
+    }
+
     @After
     fun teardown() {
         mockWebServer.shutdown()
+        Dispatchers.resetMain()
+        mainThreadSurrogate.close()
     }
 
 

@@ -67,7 +67,7 @@ class NetworkRequestTest {
         val jsonFileName = "postsresponse.json"
         mockWebServer.enqueueResponse(jsonFileName, 200)
         runTest {
-            val actual = postsService.getPosts()
+            val actual = postsService.getPostsTest()
             val expected = getPostsTestObject(jsonFileName)
             assert(expected != null)
             assertEquals(actual.first(), expected?.first())

@@ -19,6 +19,10 @@ class App : Application() {
         TheActor.run {
             TheActorScope::logActor.toActor(Unit)
         }.start()
+
+        TheActor.run {
+            TheActorScope::LoginAttemptCounterActor.toActor(0)
+        }.start()
     }
 
     private fun createApi(): Api = ApiImpl()

@@ -15,7 +15,7 @@ object APIHelper {
             .build()
     }
 
-    private val postsService by lazy {
+    val postsService: PostsService by lazy {
         Retrofit.Builder()
             .baseUrl("https://jsonplaceholder.typicode.com")
             .client(okHttpClient)
@@ -23,6 +23,5 @@ object APIHelper {
             .build()
             .create(PostsService::class.java)
     }
-
-    suspend fun getPosts(): PostsResponse = postsService.getPosts()
+    
 }

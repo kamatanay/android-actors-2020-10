@@ -5,9 +5,6 @@ import se.accepted.watcher.model.PostsResponse
 
 interface PostsService {
 
-    @GET("https://jsonplaceholder.typicode.com/posts")
-    suspend fun getPostsTest(): PostsResponse
-
     @GET("/posts")
     suspend fun getPosts(): PostsResponse
 

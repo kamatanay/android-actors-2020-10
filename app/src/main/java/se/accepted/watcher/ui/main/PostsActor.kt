@@ -4,8 +4,7 @@ import kotlinx.coroutines.CompletableDeferred
 import se.accepted.watcher.Message
 import se.accepted.watcher.State
 import se.accepted.watcher.model.PostsResponse
-import se.accepted.watcher.network.APIHelper
-import java.lang.Exception
+import se.accepted.watcher.network.PostsService
 
 
 object FetchPosts : Message
@@ -18,11 +17,11 @@ sealed class PostsState : State {
     object NotFetched : PostsState()
 }
 
-fun postsActor(): ActorFunction<PostsState> {
+fun postsActor(postsService: PostsService): ActorFunction<PostsState> {
 
     suspend fun getPosts(): PostsState {
         return try {
-            val response = APIHelper.getPosts()
+            val response = postsService.getPosts()
             PostsState.Success(response)
         } catch (e: Exception) {
             PostsState.Error

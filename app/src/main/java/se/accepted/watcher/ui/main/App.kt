@@ -2,15 +2,16 @@ package se.accepted.watcher.ui.main
 
 import android.app.Application
 import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.channels.ActorScope
-import se.accepted.watcher.Message
-import se.accepted.watcher.ui.main.TheActor.Companion.toActor
+import se.accepted.watcher.network.APIHelper
 
 @ObsoleteCoroutinesApi
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+
+
         val api = createApi()
 
         TheActor.run {
@@ -25,7 +26,7 @@ class App : Application() {
             TheActorScope::LoginAttemptCounterActor.toActor(0)
         }.start()
         TheActor.run {
-            postsActor().toActor(PostsState.NotFetched)
+            postsActor(APIHelper.postsService).toActor(PostsState.NotFetched)
         }.start()
     }
 

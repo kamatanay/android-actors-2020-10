@@ -2,9 +2,7 @@ package se.accepted.watcher.ui.main
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ActorScope
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
-import kotlinx.coroutines.flow.collect
 import se.accepted.watcher.AppStream
 import se.accepted.watcher.AppStream.messages
 import se.accepted.watcher.Message
